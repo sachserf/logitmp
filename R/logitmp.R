@@ -7,17 +7,13 @@ logitmp <- function(list_of_models,
                              annotations = FALSE,
                              color = FALSE){
 # this function is licensed under GPL (>=2)
-  # part one: Preparing what´s needed
+  # part one: Preparing what"\u0060"s needed
     # ResourceSelection for hoslem.test (testet Version "0.2-4")
     # pROC for AUC and ROC-plot (testet Version "1.8")
     # fmsb for NagelkerkeR2
       # because of dependencies the package fsmb is not included and will be detached if loaded,
       # though the function for NagelkerkeR2 is copied without making any changes
       # (copied Version "0.5.2")
-  need_pack <- c("pROC", "ResourceSelection")
-  exist_pack  <- need_pack %in% rownames(installed.packages())
-  if(any(!exist_pack)) install.packages(need_pack[!exist_pack])
-  lapply(need_pack, library, character.only = TRUE)
   if("fmsb" %in% (.packages()) == TRUE) detach(package:fmsb)
   # the NagelkerkeR2-function from package fsmb:
   NagelkerkeR2 <- function (rr)
@@ -149,10 +145,10 @@ logitmp <- function(list_of_models,
     resid_deviance <- model$deviance
     deviance_diff <- resid_deviance - null_deviance
     AIC <- model$aic
-    AUC <- as.numeric(auc(roc(response = model$y, predictor = fitted(model))))
+    AUC <- as.numeric(pROC::auc(pROC::roc(response = model$y, predictor = fitted(model))))
     Nagel_R2 <- NagelkerkeR2(model)$R2
     if (TN + FN != 0) {
-      Hoslem_p_value <-hoslem.test(model$y, fitted(model),g=10)$p.value
+      Hoslem_p_value <-ResourceSelection::hoslem.test(model$y, fitted(model),g=10)$p.value
     }else
     {
       Hoslem_p_value <- NaN
@@ -213,7 +209,7 @@ logitmp <- function(list_of_models,
                                    "Hoslem p-value",
                                    "NMI",
                                    "kappa",
-                                   "Nagelkerke R²",
+                                   "Nagelkerke R\u00B2",
                                    "AUC")
   print(final_data_frame)
   # definitions and annotations
@@ -224,12 +220,12 @@ logitmp <- function(list_of_models,
     cat("________________________________________________________________________________\n ANNOTATIONS:
 For further information please refer to:
   (1) Crawley, Michael J. 2007. The R Book. Chichester, England; Hoboken, N.J.: Wiley.
-  (2) Fielding, Alan H., and John F. Bell. 1997. “A Review of Methods for the Assessment of Prediction Errors in Conservation Presence/absence Models.” Environmental Conservation 24 (01): 38–49.
-  (3) Powers, David Martin. 2011. “Evaluation: From Precision, Recall and F-Measure to ROC, Informedness, Markedness and Correlation.” Journal of Machine Learning Technologies 2 (1): 37–63.
-  (4) Allouche, Omri, Asaf Tsoar, and Ronen Kadmon. 2006. “Assessing the Accuracy of Species Distribution Models: Prevalence, Kappa and the True Skill Statistic (TSS).” Journal of Applied Ecology 43 (6): 1223–32.
-  (5) Subhash R. Lele, Jonah L. Keim and Peter Solymos (2014). ResourceSelection: Resource Selection (Probability) Functions for Use-Availability Data. R package version 0.2-4.
+  (2) Fielding, Alan H., and John F. Bell. 1997. 'A Review of Methods for the Assessment of Prediction Errors in Conservation Presence/absence Models.' Environmental Conservation 24 (01): 38\u002D49.
+  (3) Powers, David Martin. 2011. 'Evaluation: From Precision, Recall and F-Measure to ROC, Informedness, Markedness and Correlation.' Journal of Machine Learning Technologies 2 (1): 37\u002D63.
+  (4) Allouche, Omri, Asaf Tsoar, and Ronen Kadmon. 2006. 'Assessing the Accuracy of Species Distribution Models: Prevalence, Kappa and the True Skill Statistic (TSS).' Journal of Applied Ecology 43 (6): 1223\u002D32.
+  (5) Subhash R. Lele, Jonah L. Keim and Peter Solymos (2014). ResourceSelection: Resource Selection (Probability) Functions for Use-Availability Data. R package version 0.2\u002D4.
   (6) Minato Nakazawa (2014). fmsb: Functions for medical statistics book with some demographic data. R package version 0.4.4.
-  (7) Xavier Robin, Natacha Turck, Alexandre Hainard, Natalia Tiberti, Frédérique Lisacek, Jean-Charles Sanchez and Markus Müller (2011). pROC: an open-source package for R and S+ to analyze and compare ROC curves. BMC Bioinformatics, 12, p. 77
+  (7) Xavier Robin, Natacha Turck, Alexandre Hainard, Natalia Tiberti, Fr\u00E9d\u00E9rique Lisacek, Jean-Charles Sanchez and Markus M\u00fcller (2011). pROC: an open-source package for R and S+ to analyze and compare ROC curves. BMC Bioinformatics, 12, p. 77
 
   predicted and actual -    = true negative = TN
   predicted + but actual -  = false positive = FP
@@ -253,7 +249,7 @@ For further information please refer to:
     Markedness              <- tpa + tna -1 (3)
     Hoslem p-value:         computed with R-package ResourceSelection (5)
     NMI                     = normalized mutual information statistic (2)
-    Nagelkerke R²:          computed with formula from R-package fmsb (6)
+    Nagelkerke R\u00B2:     computed with formula from R-package fmsb (6)
     AUC:                    computed with R-package pROC (7) \n")
   }
   # part five: compute the plots
@@ -279,7 +275,7 @@ For further information please refer to:
   # the ROC-plot
   # compute the data.frame that is needed for the plot:
   roc_basic <- function (rocmod){
-    roc(response = rocmod$y,
+    pROC::roc(response = rocmod$y,
         predictor = fitted(rocmod))
   }
   roc_data <- lapply(list_of_models, roc_basic)
