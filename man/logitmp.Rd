@@ -78,9 +78,7 @@ Indexing and formatting is straightforward. For example try:
 
 logitmp(list(your_model_here))[["measures"]][c("kappa", "AUC", "Nagelkerke R²"),]
 }
-\section{Warning }{The function will install and attach
-the packages 'ResourceSelection' (for hoslem.test) and 'pROC' (for AUC and ROC-plot).
-If attached the package 'fmsb' will be detached.}
+\section{Warning }{Some external packages (functions) are needed: 'ResourceSelection::hoslem.test', 'pROC::auc',  'pROC::roc' and 'fmsb::NagelkerkeR2'}
 \seealso{
 ResourceSelection::hoslem.test
 

@@ -9,4 +9,4 @@ Description: The package contains a function that computes several performance m
 License: GPL-2
 LazyData: TRUE
 Encoding: UTF-8
-Imports: ResourceSelection, pROC
+Imports: ResourceSelection, pROC, fmsb

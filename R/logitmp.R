@@ -6,24 +6,7 @@ logitmp <- function(list_of_models,
                              percentual = TRUE,
                              annotations = FALSE,
                              color = FALSE){
-# this function is licensed under GPL (>=2)
-  # part one: Preparing what"\u0060"s needed
-    # ResourceSelection for hoslem.test (testet Version "0.2-4")
-    # pROC for AUC and ROC-plot (testet Version "1.8")
-    # fmsb for NagelkerkeR2
-      # because of dependencies the package fsmb is not included and will be detached if loaded,
-      # though the function for NagelkerkeR2 is copied without making any changes
-      # (copied Version "0.5.2")
-  if("fmsb" %in% (.packages()) == TRUE) detach(package:fmsb)
-  # the NagelkerkeR2-function from package fsmb:
-  NagelkerkeR2 <- function (rr)
-  {
-    n <- nrow(rr$model)
-    R2 <- (1 - exp((rr$dev - rr$null)/n))/(1 - exp(-rr$null/n))
-    RVAL <- list(N = n, R2 = R2)
-    return(RVAL)
-  }
-  # part two: define some metainformation for upcoming functions
+  # part one: define some metainformation for upcoming functions
   nr_models <- length(list_of_models)
   model_vector <- 1:nr_models
   # name the models:
@@ -46,7 +29,7 @@ logitmp <- function(list_of_models,
   else{
   model_names <- orig_names_temp[2:length(orig_names_temp)]
   }
-  # part three: compute  contingency tables
+  # part two: compute  contingency tables
   confusion_matrix_func <- function(model, rel = FALSE){
     confusion_matrix <- table(Predicted = round(model$fitted.values),
                               Actual = model$y,
@@ -93,7 +76,7 @@ logitmp <- function(list_of_models,
   print(100*confma_list_rel, digits = 2)
   }
   cat("________________________________________________________________________________\n MEASURES FOR CLASSIFICATION QUALITY \n")
-  # part four: compute some measures for classification quality
+  # part three: compute some measures for classification quality
   accuracy_func <- function (model){
     # compute a confusion matrix again:
     confusion_matrix <- table(Predicted = round(model$fitted.values),
@@ -146,7 +129,7 @@ logitmp <- function(list_of_models,
     deviance_diff <- resid_deviance - null_deviance
     AIC <- model$aic
     AUC <- as.numeric(pROC::auc(pROC::roc(response = model$y, predictor = fitted(model))))
-    Nagel_R2 <- NagelkerkeR2(model)$R2
+    Nagel_R2 <- fmsb::NagelkerkeR2(model)$R2
     if (TN + FN != 0) {
       Hoslem_p_value <-ResourceSelection::hoslem.test(model$y, fitted(model),g=10)$p.value
     }else
@@ -252,7 +235,7 @@ For further information please refer to:
     Nagelkerke R\u00B2:     computed with formula from R-package fmsb (6)
     AUC:                    computed with R-package pROC (7) \n")
   }
-  # part five: compute the plots
+  # part four: compute the plots
   # the calibration plot
   # compute the data.frame that is needed for the plot:
   calplot_basic <- function(model, n_bins = 10){
