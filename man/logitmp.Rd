@@ -78,13 +78,14 @@ Indexing and formatting is straightforward. For example try:
 
 logitmp(list(your_model_here))[["measures"]][c("kappa", "AUC", "Nagelkerke R²"),]
 }
-\section{Warning }{Some external packages (functions) are needed: 'ResourceSelection::hoslem.test', 'pROC::auc',  'pROC::roc' and 'fmsb::NagelkerkeR2'}
-\seealso{
-ResourceSelection::hoslem.test
+\section{Dependencies}{
+'ResourceSelection::hoslem.test' (tested Version "0.2-5")
 
-fsmb::NagelkerkeR2
+'pROC::auc' (tested Version "1.8")
 
-pROC::roc
+'pROC::roc' (tested Version "1.8")
+
+'fmsb::NagelkerkeR2' (tested Version "0.5.2")
 }
 \examples{
 testdata <- iris[-which(iris$Species == "setosa"),]
