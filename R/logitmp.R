@@ -12,14 +12,14 @@ logitmp <- function(list_of_models,
   # name the models:
   orig_names_temp <- as.character(substitute(list_of_models)) # get original model names
   if (abbreviations == TRUE) {
-    if(abbreviations_id == "letters"){
-    model_names <- paste(abbreviations_names, letters[model_vector], sep=" ")
+    if (abbreviations_id == "letters") {
+    model_names <- paste(abbreviations_names, letters[model_vector], sep = " ")
     }
-    else if(abbreviations_id == "LETTERS"){
-      model_names <- paste(abbreviations_names, LETTERS[model_vector], sep=" ")
+    else if (abbreviations_id == "LETTERS") {
+      model_names <- paste(abbreviations_names, LETTERS[model_vector], sep = " ")
     }
   else{
-    model_names <- paste(abbreviations_names, model_vector, sep=" ")
+    model_names <- paste(abbreviations_names, model_vector, sep = " ")
   }
   orig_names <- orig_names_temp[2:length(orig_names_temp)]
   cat("________________________________________________________________________________\n USED MODELS \n")
@@ -45,7 +45,7 @@ logitmp <- function(list_of_models,
         FN <- confusion_matrix[which(as.numeric(row.names(confusion_matrix)) == 0),2]
         FP <- confusion_matrix[which(as.numeric(row.names(confusion_matrix)) == 1),1]
         TP <- confusion_matrix[which(as.numeric(row.names(confusion_matrix)) == 1),2]
-        N <- TP+FP+FN+TN
+        N <- TP + FP + FN + TN
         if (rel == TRUE) return(c(TN/N, FP/N, FN/N, TP/N))
         else return(c(TN,FP,FN,TP,N))
   }
@@ -61,7 +61,7 @@ logitmp <- function(list_of_models,
   # print contingency table and beautify output:
   cat("________________________________________________________________________________\n CONTINGENCY TABLE \n")
   print(confma_list)
-  if (percentual == TRUE){
+  if (percentual == TRUE) {
   # second contingency table with relative values
   confma_list_rel <- data.frame(sapply(list_of_models,
                                        confusion_matrix_func,
@@ -77,7 +77,7 @@ logitmp <- function(list_of_models,
   }
   cat("________________________________________________________________________________\n MEASURES FOR CLASSIFICATION QUALITY \n")
   # part three: compute some measures for classification quality
-  accuracy_func <- function (model){
+  accuracy_func <- function(model) {
     # compute a confusion matrix again:
     confusion_matrix <- table(Predicted = round(model$fitted.values),
                               Actual = model$y,
@@ -93,33 +93,33 @@ logitmp <- function(list_of_models,
     FN <- confusion_matrix[which(as.numeric(row.names(confusion_matrix)) == 0),2]
     FP <- confusion_matrix[which(as.numeric(row.names(confusion_matrix)) == 1),1]
     TP <- confusion_matrix[which(as.numeric(row.names(confusion_matrix)) == 1),2]
-    N <- TP+FP+FN+TN
+    N <- TP + FP + FN + TN
     # define the measures
     # Fielding and Bell 1997
     prevalence <- sum(model$y)/N
-    kappa <- ((TP+TN) -
-                (((TP+FN)*(TP+FP) + (FP+TN)*(FN+TN))/N)) /
-                (N - (((TP+FN)*(TP+FP) + (FP+TN)*(FN+TN))/N))
+    kappa <- ((TP + TN) -
+                (((TP + FN)*(TP + FP) + (FP + TN)*(FN + TN))/N)) /
+                (N - (((TP + FN)*(TP + FP) + (FP + TN)*(FN + TN))/N))
     nmi <- (-TP*log(TP) - FP*log(FP) -
               FN*log(FN) - TN*log(TN) +
-              (TP+FP)*log(TP+FP) +
-              (FN+TN)*log(FN+TN)) / (N*log(N) -
-              ((TP+FN)*log(TP+FN) +
-                 (FP+TN)*log(FP+TN))) #normalized_mutual_information_statistic
-    misclassification_rate <- (FP+FN)/N
+              (TP + FP)*log(TP + FP) +
+              (FN + TN)*log(FN + TN)) / (N*log(N) -
+              ((TP + FN)*log(TP + FN) +
+                 (FP + TN)*log(FP + TN))) #normalized_mutual_information_statistic
+    misclassification_rate <- (FP + FN)/N
     odds_ratio <- (TP*TN)/(FN*FP)
     # Powers 2011
-    tpr <- TP/(TP+FN)   # Recall / True positive Rate / sensitivity
-    tpa <- TP/(TP+FP) # precision / Confidence / positive_predictive_power
-    tnr <- TN/(FP+TN)   # Inverse Recall / True negative Rate / specifity
-    tna <- TN/(FN+TN)  # Inverse Precision / True negative Accuracy / negative_predictive_power
-    fpr <- FP/(FP+TN)  # fallout
-    fnr <- FN/(TP+FN) # miss_rate
-    tcr <- (TP+TN)/N  # accuracy / tca / correct_classification_rate
-    dice <- TP/(TP+(FN+FP)/2)   # F1 # F-measure # = 2/((1/tpa)+(1/tpr)) (fawcett 2006)
-    jaccard <- TP/(N-TN)
-    Informedness <-  tpr-fpr   # true_skill_statistic <- tpr + tnr - 1 ( Allouche et al 2006)
-    Markedness <-  tpa + tna -1 # DeltaP in Psychology - "the normative measure of contingency"
+    tpr <- TP/(TP + FN)   # Recall / True positive Rate / sensitivity
+    tpa <- TP/(TP + FP) # precision / Confidence / positive_predictive_power
+    tnr <- TN/(FP + TN)   # Inverse Recall / True negative Rate / specifity
+    tna <- TN/(FN + TN)  # Inverse Precision / True negative Accuracy / negative_predictive_power
+    fpr <- FP/(FP + TN)  # fallout
+    fnr <- FN/(TP + FN) # miss_rate
+    tcr <- (TP + TN)/N  # accuracy / tca / correct_classification_rate
+    dice <- TP/(TP + (FN + FP)/2)   # F1 # F-measure # = 2/((1/tpa)+(1/tpr)) (fawcett 2006)
+    jaccard <- TP/(N - TN)
+    Informedness <-  tpr - fpr   # true_skill_statistic <- tpr + tnr - 1 ( Allouche et al 2006)
+    Markedness <-  tpa + tna - 1 # DeltaP in Psychology - "the normative measure of contingency"
     #Crawley
     overdispersion_factor <- model$deviance/model$df.residual
     # miscellanous
@@ -131,7 +131,7 @@ logitmp <- function(list_of_models,
     AUC <- as.numeric(pROC::auc(pROC::roc(response = model$y, predictor = fitted(model))))
     Nagel_R2 <- fmsb::NagelkerkeR2(model)$R2
     if (TN + FN != 0) {
-      Hoslem_p_value <-ResourceSelection::hoslem.test(model$y, fitted(model),g=10)$p.value
+      Hoslem_p_value <- ResourceSelection::hoslem.test(model$y, fitted(model),g = 10)$p.value
     }else
     {
       Hoslem_p_value <- NaN
@@ -162,13 +162,13 @@ logitmp <- function(list_of_models,
       nmi,
       kappa,
       Nagel_R2,
-      AUC), digits=3)
+      AUC), digits = 3)
     # return the output
     return(accuracy)
   }
   # apply the function, define the names of measures and print the table:
   final_data_frame <- data.frame(lapply(list_of_models, accuracy_func))
-  names(final_data_frame)<- model_names
+  names(final_data_frame) <- model_names
   row.names(final_data_frame) <- c("degrees of freedom",
                                    "prevalence",
                                    "null deviance",
@@ -196,7 +196,7 @@ logitmp <- function(list_of_models,
                                    "AUC")
   print(final_data_frame)
   # definitions and annotations
-  if (annotations == FALSE){
+  if (annotations == FALSE) {
     cat("________________________________________________________________________________\n NOTE: For further information choose option \"annotations = TRUE\" \n")
   }
   else{
@@ -219,6 +219,9 @@ For further information please refer to:
     overdispersion factor   = deviance/df.residual (1)
     odds ratio              <- (TP*TN)/(FN*FP) (2)
     misclassification_rate  <- (FP+FN)/N (2)
+    prevalence:             <- sum(model$y)/N (2)
+    NMI                     = normalized mutual information statistic (2)
+    kappa:                  <- see formula in raw code (2)
     tcr (accuracy)          <- (TP+TN)/N (3)
     tpr (sensitivity)       <- TP/(TP+FN) (3)
     tnr (specifity)         <- TN/(FP+TN) (3)
@@ -231,7 +234,6 @@ For further information please refer to:
     Informedness (TSS)      <- tpr-fpr (3); see (4) for TSS
     Markedness              <- tpa + tna -1 (3)
     Hoslem p-value:         computed with R-package ResourceSelection (5)
-    NMI                     = normalized mutual information statistic (2)
     Nagelkerke R\u00B2:     computed with formula from R-package fmsb (6)
     AUC:                    computed with R-package pROC (7) \n")
   }
@@ -257,34 +259,34 @@ For further information please refer to:
   names(calplot_data) <- model_names
   # the ROC-plot
   # compute the data.frame that is needed for the plot:
-  roc_basic <- function (rocmod){
+  roc_basic <- function(rocmod) {
     pROC::roc(response = rocmod$y,
         predictor = fitted(rocmod))
   }
   roc_data <- lapply(list_of_models, roc_basic)
   names(roc_data) <- model_names
-  if (plots==TRUE){
+  if (plots == TRUE) {
   # output an empty plot-structure:
   plot(c(-0.05, 1.05), c(-0.05, 1.05),
        type = "n",
-       ylab="Observed Occurrences",
-       xlab="Predicted Probability",
-       main="")
+       ylab = "Observed Occurrences",
+       xlab = "Predicted Probability",
+       main = "")
   abline(a = 0,
          b = 1,
          lty = 3,
          col = "darkgrey")
-  if(color == TRUE){
+  if (color == TRUE) {
   legend("bottomright",
          model_names,
          pch = 1,
-         col = c(2:(nr_models+1)),
-         cex=0.7)
+         col = c(2:(nr_models + 1)),
+         cex = 0.7)
   # function to plot the lines:
   calplot_lines_func <- function(movect){
     points(calplot_data[[movect]]$bin_centers,
            calplot_data[[movect]]$observed_prob,
-           col = movect+1,
+           col = movect + 1,
            type = "b",
            cex = 0.8)
   }
@@ -294,13 +296,13 @@ For further information please refer to:
   {
     legend("bottomright",
            model_names,
-           pch = c(2:(nr_models+1)),
-           cex=0.7)
+           pch = c(2:(nr_models + 1)),
+           cex = 0.7)
     # function to plot the lines:
     calplot_lines_func <- function(movect){
       points(calplot_data[[movect]]$bin_centers,
              calplot_data[[movect]]$observed_prob,
-             pch = movect+1,
+             pch = movect + 1,
              type = "b",
              cex = 0.8)
     }
@@ -317,17 +319,17 @@ For further information please refer to:
          b = 1,
          lty = 3,
          col = "darkgrey")
-  if(color==TRUE){
+  if (color == TRUE) {
   legend("bottomright",
          model_names,
          lty = 1,
-         col = c(2:(nr_models+1)),
-         cex=0.7)
+         col = c(2:(nr_models + 1)),
+         cex = 0.7)
   # function to plot the lines:
   roc_plot_lines_func <- function(move){
-  lines(1-roc_data[[move]]$specificities,
+  lines(1 - roc_data[[move]]$specificities,
         roc_data[[move]]$sensitivities,
-        col = move+1)
+        col = move + 1)
   }
   # plot all models without printing the output in the console:
   invisible(lapply(model_vector, roc_plot_lines_func))
@@ -336,10 +338,10 @@ For further information please refer to:
     legend("bottomright",
            model_names,
            lty = c(1:nr_models),
-           cex=0.7)
+           cex = 0.7)
     # function to plot the lines:
-    roc_plot_lines_func <- function(move){
-      lines(1-roc_data[[move]]$specificities,
+    roc_plot_lines_func <- function(move) {
+      lines(1 - roc_data[[move]]$specificities,
             roc_data[[move]]$sensitivities,
             lty = move,
             lwd = 1.5)

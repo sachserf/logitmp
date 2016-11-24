@@ -2,10 +2,10 @@ Package: logitmp
 Type: Package
 Title: logistic model performance
 Version: 0.1
-Date: 2015-09-29
+Date: 2016-11-24
 Author: Frederik Sachser
 Maintainer: <f.sachser@gmx.at>
-Description: The package contains a function that computes several performance measures for logistic regression models. Furthermore it creates a ROC-plot and a calibration-plot. There are several options to customize the output. The function will install and attach the packages 'ResourceSelection' (for hoslem.test) and 'pROC' (for AUC and ROC-plot). If attached the package 'fmsb' will be detached.
+Description: The package contains a function that computes several performance measures for logistic regression models. Furthermore it creates a ROC-plot and a calibration-plot. There are several options to customize the output. The function will install and use the packages 'ResourceSelection' (for hoslem.test), 'pROC' (for AUC and ROC-plot) and 'fmsb' (for Nagelkerke R^2).
 License: GPL-2
 LazyData: TRUE
 Encoding: UTF-8
